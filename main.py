@@ -93,7 +93,54 @@ def data_distribution():
 # data_distribution()
 
 def top_ten_directors():
-    print(movies_dp['Director'])
-    
+    # print(movies_dp['Director'])
+    # value_counts() method helps in counting the frequency of the entries, returns data in descending order
+    # here head(10) - limits or makes the count to top 10 
+    top_ten_director = movies_dp['Director'].value_counts().head(10)
+    # print("\nTop 10 Directors to make to the List :")
+    # print(top_ten_director)
+    return top_ten_director
 
-top_ten_directors()
+# top_ten_directors()
+
+def genre_ratings():
+    # print(movies_dp['Genre'])
+
+    # as each movie have multiple genres it won't be possible analyse here
+    # so we break each genre for each row that would create duplicate rows for movie entries with multiple genres
+    # for that we do .spilt() then we explode(), which creates row for each genre
+
+    movies_dp['Genre'] = movies_dp['Genre'].str.split(', ')
+    movies_dp_exploded = movies_dp.explode('Genre') # need to create new dataframe for explode()
+    # print(movies_dp_exploded)
+
+    genre_Imdb_avg_ratings = movies_dp_exploded.groupby('Genre')['IMDB_Rating'].mean()
+    # print('\nGenres avg ratings : ')
+    # print(genre_Imdb_avg_ratings)
+    return genre_Imdb_avg_ratings
+
+# genre_ratings()
+
+def plot_genreAndDirectorGraphs():
+    directors = top_ten_directors()
+    genres = genre_ratings()
+    
+    fig,ax = plt.subplots(1,2, figsize=(16,6))
+
+    ax[0].barh(
+        directors.index,
+        directors.values
+    )
+    ax[0].set_title("Top 10 Directors in IMDb's Top 1000")
+    ax[0].set_ylabel("Directors")
+
+    ax[1].barh(
+        genres.index,
+        genres.values
+    )
+    ax[1].set_title("Average IMDb Rating by Genre")
+    ax[1].set_ylabel("Genres")
+
+    plt.show()
+
+# plot_genreAndDirectorGraphs()
