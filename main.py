@@ -144,3 +144,39 @@ def plot_genreAndDirectorGraphs():
     plt.show()
 
 # plot_genreAndDirectorGraphs()
+
+# Investigating correlations 
+
+# using corr() method for getting correlations between different columns
+
+def data_correlation():
+    # before running correlation we need to remove or substitue / fill all the Nan values
+    # I am dropping all the Nan values
+    cleaned_movies_dp = movies_dp.dropna()
+    print(cleaned_movies_dp.info())
+
+    # before going for calling corr() its better to keep only numeric columns,
+    # so that we don't see any failures while running corr() method
+
+    only_numeric_dp = cleaned_movies_dp.select_dtypes(include=['number'])
+    print("\nOnly numeric dataframe : ")
+    print(only_numeric_dp.info())
+
+    # .corr(), by default uses person method
+    correlation_matrix = only_numeric_dp.corr()
+    print("\nThe correlation matrix :")
+    print(correlation_matrix)
+
+# data_correlation()
+
+# Analysing the relation between Runtime and IMDB_Rating 
+
+def runtime_ImdbRating_realtion() :
+    # print(movies_dp.info())
+    plt.scatter(movies_dp['Runtime'], movies_dp['IMDB_Rating'])
+    plt.xlabel("Movie Runtimes")
+    plt.ylabel("IMDB Ratings")
+    plt.title("Runtime v/s IMDB Ratings")
+    plt.show()
+
+# runtime_ImdbRating_realtion()
